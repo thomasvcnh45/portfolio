@@ -55,6 +55,7 @@ nav ul li a::after{
 nav ul li a:hover::after{
     width: 100%
 }
+/*--dark and white--*/
 :root{
     --primary-color: #fff;
     --secondary-color: #000000;
@@ -71,6 +72,7 @@ nav ul{
     flex: 1;
     text-align: right;
 }
+/*--end dark and white--*/
 /*--end navbar--*/
 
 /*--titre--*/
@@ -408,7 +410,18 @@ nav ul{
 .contact-right form{
     width: 100%;
 }
-form input, form textarea{
+form input, form textarea, form option{
+    width: 100%;
+    border: 0;
+    outline: none;
+    background: #262626;
+    padding: 15px;
+    margin: 15px 0;
+    color: var(--primary-color);
+    font-size: 18px;
+    border-radius: 6px;
+}
+form select{
     width: 100%;
     border: 0;
     outline: none;
@@ -425,6 +438,21 @@ form .btn2{
     margin-top: 20px;
     cursor: pointer;
 }
+/*reservation*/
+.contact.center{
+    flex-basis: 50%;
+}
+.contact-center p{
+    margin-top: 30px;
+}
+.contact-center p i{
+    color : #ff004f;
+    margin-right: 15px;
+    font-size: 25px;
+}
+.contact-center form{
+    width: 100%;
+}  
 /*--Footer*/
 .copyright{
     width:100%;
@@ -450,13 +478,14 @@ nav .fas{
     }
     .header-text h1{
         font-size: 30px;
+        flex-basis: 100%;
     }
     nav .fas{
         display:block;
         font-size: 25px;
     }
     nav ul{
-        background:#ff004f;
+        background:#262626;
         position: fixed;
         top:0;
         right: -200px;
@@ -499,6 +528,9 @@ nav .fas{
         margin-right:20px;
     }
     .contact-left, .contact-right{
+        flex-basis: 100%;
+    }
+    .reservation{
         flex-basis: 100%;
     }
     .copyright{
