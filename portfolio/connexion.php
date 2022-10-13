@@ -1,37 +1,59 @@
 <?php 
-    session_start(); // Démarrage de la session
-    require_once 'config.php'; // On inclut la connexion à la base de données
 
-    if(!empty($_POST['email']) && !empty($_POST['password'])) // Si il existe les champs email, password et qu'il sont pas vident
-    {
-        // Patch XSS
-        $email = htmlspecialchars($_POST['email']); 
-        $password = htmlspecialchars($_POST['password']);
-        
-        $email = strtolower($email); // email transformé en minuscule
-        
-        // On regarde si l'utilisateur est inscrit dans la table utilisateurs
-        $check = $bdd->prepare('SELECT pseudo, email, password, token FROM utilisateurs WHERE email = ?');
-        $check->execute(array($email));
-        $data = $check->fetch();
-        $row = $check->rowCount();
-        
-        
+include 'dbconfig.php';
 
-        // Si > à 0 alors l'utilisateur existe
-        if($row > 0)
-        {
-            // Si le mail est bon niveau format
-            if(filter_var($email, FILTER_VALIDATE_EMAIL))
-            {
-                // Si le mot de passe est le bon
-                if(password_verify($password, $data['password']))
-                {
-                    // On créer la session et on redirige sur landing.php
-                    $_SESSION['user'] = $data['token'];
-                    header('Location: landing.php');
-                    die();
-                }else{ header('Location: index.php?login_err=password'); die(); }
-            }else{ header('Location: index.php?login_err=email'); die(); }
-        }else{ header('Location: index.php?login_err=already'); die(); }
-    }else{ header('Location: index.php'); die();} // si le formulaire est envoyé sans aucune données
+session_start();
+
+error_reporting(0);
+
+if (isset($_SESSION['username'])) {
+    header("Location: welcome.php");
+}
+
+if (isset($_POST['submit'])) {
+	$email = $_POST['email'];
+	$password = md5($_POST['password']);
+
+	$sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+	$result = mysqli_query($conn, $sql);
+	if ($result->num_rows > 0) {
+		$row = mysqli_fetch_assoc($result);
+		$_SESSION['username'] = $row['username'];
+		header("Location: welcome.php");
+	} else {
+		echo "<script>alert('Woops! Email or Password is Wrong.')</script>";
+	}
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<title>Connexion</title>
+</head>
+<body>
+	<div class="container">
+		<form action="" method="POST" class="login-email">
+			<p class="login-text" style="font-size: 2rem; font-weight: 800;">Connexion</p>
+			<div class="input-group">
+				<input type="email" placeholder="Email" name="email" value="<?php echo $email; ?>" required>
+			</div>
+			<div class="input-group">
+				<input type="password" placeholder="Mot de passe" name="password" value="<?php echo $_POST['password']; ?>" required>
+			</div>
+			<div class="input-group">
+				<button name="submit" class="btn">Connexion</button>
+			</div>
+			<p class="login-register-text">Vous n'avez pas de compte ? <a href="inscription.php">Inscrivez vous</a>.</p>
+		</form>
+	</div>
+</body>
+</html>

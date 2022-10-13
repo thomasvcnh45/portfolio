@@ -1,7 +1,12 @@
-<?php require 'dbconfig.php'; ?>
+<?php 
 
+include 'dbconfig.php';
 
-<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+}
+
 if (isset($_POST['submit'])) {
     $name = $_POST['name'];
     $email = $_POST['email'];
@@ -15,8 +20,8 @@ if (isset($_POST['submit'])) {
     }
 }
 
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,9 +45,9 @@ if (isset($_POST['submit'])) {
                     <li><a href="#services">Services</a></li>
                     <li><a href="#portfolio">Portfolio</a></li>
                     <li><a href="#contact">Contact</a></li>
-                    <li><a href="reservation.php">Prendre rendez-vous</a></li>
-                    <li><a href="connexion.php">Connexion</a></li>
-                    <li><a href="inscription.php">Inscription</a></li>
+                    <li><a href="reservationuser.php">Prendre rendez-vous</a></li>
+                    <li><a href="welcome.php"><?php echo $_SESSION['username'] ?></a></li>
+                    <li><a href="logout.php">Deconnexion</a></li>
                     <img src="images/sun.png" id="icon">
                     <i class="fas fa-times" onclick="closemenu()"></i>
                 </ul>
