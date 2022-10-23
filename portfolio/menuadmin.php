@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
                     <li><a href="#portfolio">Portfolio</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="reservationuser.php">Prendre rendez-vous</a></li>
-                    <li><a href="pageuser.php"><?php echo $_SESSION['username'] ?></a></li>
+                    <li><a href="pageadmin.php"><?php echo $_SESSION['username'] ?></a></li>
                     <li><a href="logout.php">Deconnexion</a></li>
                     <img src="images/sun.png" id="icon">
                     <i class="fas fa-times" onclick="closemenu()"></i>

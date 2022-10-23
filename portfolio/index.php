@@ -40,7 +40,6 @@ if (isset($_POST['submit'])) {
                     <li><a href="#services">Services</a></li>
                     <li><a href="#portfolio">Portfolio</a></li>
                     <li><a href="#contact">Contact</a></li>
-                    <li><a href="reservation.php">Prendre rendez-vous</a></li>
                     <li><a href="connexion.php">Connexion</a></li>
                     <li><a href="inscription.php">Inscription</a></li>
                     <img src="images/sun.png" id="icon">
@@ -191,14 +190,14 @@ if (isset($_POST['submit'])) {
                     <a href="https://www.instagram.com/?hl=fr"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.linkedin.com/in/pascal-huynh-032a7a44/?originalSubdomain=fr"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                <a href="images/my-cv.pdf" download class="btn btn2">Download CV</a>
+                <a href="images/my-cv.pdf" download class="btn btn2">Télécharger CV</a>
             </div>
             <div class="contact-right">
                 <form name="contact" method="post" action="">
                     <input type="text" id="Nom" name="name" placeholder="Votre nom" required>
                     <input type="email" id="Email" name="email" placeholder="Votre email" required>
                     <textarea name="message" id="Message" rows="6" placeholder="Votre message"></textarea>
-                    <button type="submit" value="submit" name="submit" class="btn btn2">Submit</button>
+                    <button type="submit" value="submit" name="submit" class="btn btn2">Envoyer</button>
                 </form>
                 <span id="msg"></span>
             </div>

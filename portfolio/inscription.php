@@ -21,6 +21,7 @@ if (isset($_POST['submit']) && $_POST['g-recaptcha-response'] != "") {
 
 	if ($password == $cpassword) {
 		$sql = "SELECT * FROM users WHERE email='$email'";
+		$sql = "SELECT * FROM users WHERE username='$username'";
 		$result = mysqli_query($conn, $sql);
 		if (!$result->num_rows > 0) {
 			$sql = "INSERT INTO users (username, email, password)

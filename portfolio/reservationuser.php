@@ -1,11 +1,12 @@
-<?php
-include 'dbconfig.php';
+<?php require 'dbconfig.php'; ?>
 
+
+
+<?php
 session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
 }
-
 if (isset($_POST['submit'])) {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
@@ -14,17 +15,65 @@ if (isset($_POST['submit'])) {
     $date= $_POST['date'];
     $heure= $_POST['heure'];
     
+    $errors = array();
+
+    $errorstel = "SELECT telephone FROM reservation WHERE telephone='$telephone' ";
+    $teltel = mysqli_query($conn,$errorstel);
+    
+    $errorsemail = "SELECT email FROM reservation WHERE email='$email' ";
+    $emailemail = mysqli_query($conn,$errorsemail);
+
+    $errorsheure = "SELECT heure,date FROM reservation WHERE date='$date' AND heure='$heure' ";
+    $heureheure = mysqli_query($conn,$errorsheure);
+
+    $sql = "SELECT * FROM reservation LEFT JOIN users ON reservation.email = users.email";
+
+    if(empty($nom)) {
+        $errors['errorsnom'] = "Nom requis";
+    }
+
+    if(empty($prenom)) {
+        $errors['errorsprenom'] = "Prenom requis";
+    }
+
+    if(empty($telephone)) {
+        $errors['errorstel'] = "Telephone requis";
+    }else if(mysqli_num_rows($teltel)>0){
+        $errors['errorstel'] = "Numéro de téléphone existant";
+    }  
+
+    if(empty($email)) {
+        $errors['errorsemail'] = "Email requis";
+    }else if(mysqli_num_rows($emailemail)>0){
+        $errors['errorsemail'] = "L'émail existe déjà";
+    }    
+
+    if(empty($date)) {
+        $errors['errorsdate'] = "Date requis";
+    }else if(mysqli_num_rows($heureheure)>0){
+        $errors['errorsdate'] = "Date déjà réserver";
+    }    
+
+    if(empty($heure)) {
+        $errors['errorsheure'] = "Heure requis";
+    }else if(mysqli_num_rows($heureheure)>0){
+        echo "<script>alert('Heure déja réserver')</script>";
+    }
+
+
+    if(count($errors)==0) {
 
     $query = "INSERT INTO reservation (nom, prenom, telephone, email, date, heure) VALUES('$nom','$prenom','$telephone','$email','$date', '$heure')";
-
-    $sql = "SELECT * FROM reservation WHERE heure='$heure'";
-	
-            
-    if (mysqli_query($conn, $query)) {
-        echo "<script>alert('Votre réservation a bien été pris en compte');</script>";
+    $sql = "SELECT * FROM reservation LEFT JOIN users ON reservation.email = users.email";
+    $result = mysqli_query($conn,$query);
+    if ($result){
+        echo "<script>alert('Votre réservation a bien été pris en compte')</script>";
+    }else{
+        echo "<script>alert('Une erreure est survenue')</script>";
     }
+	}
+        
 }
-
 
 ?>
 
@@ -47,13 +96,13 @@ if (isset($_POST['submit'])) {
             <nav>
                 <img src="images/logo1.png" class="logo">
                 <ul id="sidemenu">
-                    <li><a href="menuuser.php">Home</a></li>
-                    <li><a href="menuuser.php">À propos</a></li>
-                    <li><a href="menuuser.php">Services</a></li>
-                    <li><a href="menuuser.php">Portfolio</a></li>
-                    <li><a href="menuuser.php">Contact</a></li>
+                <li><a href="#header">Home</a></li>
+                    <li><a href="#about">À propos</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#contact">Contact</a></li>
                     <li><a href="reservationuser.php">Prendre rendez-vous</a></li>
-                    <li><a href="welcome.php"><?php echo $_SESSION['username'] ?></a></li>
+                    <li><a href="pageuser.php"><?php echo $_SESSION['username'] ?></a></li>
                     <li><a href="logout.php">Deconnexion</a></li>
                     <img src="images/sun.png" id="icon">
                     <i class="fas fa-times" onclick="closemenu()"></i>
@@ -73,41 +122,45 @@ if (isset($_POST['submit'])) {
             <div class="contact-center">
                 <h1 class="sub-title">Prendre un rendez-vous</h1>
             </div>
+            <br>
+            <br>
+            <br>
             <div class="contact-center">
                 <form name="contact" method="post" action="">
-                    <input type="text" id="Nom" name="nom" placeholder="Votre nom" required>
-                    <input type="text" id="Prenom" name="prenom" placeholder="Votre prénom" required>
-                    <input name="telephone" id="telephone" placeholder="Votre numéro de téléphone" required>
-                    <input type="email" id="email" name="email" placeholder="Votre email" required>
+                    <input type="text" id="Nom" name="nom" placeholder="Votre nom" class="form-control" autocomplete="off">
+                    <p class="text-danger"><?php if(isset($errors['errorsnom'])) echo $errors['errorsnom']; ?></p>
+                    <input type="text" id="Prenom" name="prenom" placeholder="Votre prénom" class="form-control" autocomplete="off">
+                    <p class="text-danger"><?php if(isset($errors['errorsprenom'])) echo $errors['errorsprenom']; ?></p>
+                    <input name="telephone" id="telephone" placeholder="Votre numéro de téléphone" class="form-control" autocomplete="off">
+                    <p class="text-danger"><?php if(isset($errors['errorstel'])) echo $errors['errorstel']; ?></p>
+                    <input type="email" id="email" name="email" placeholder="Votre email" class="form-control" autocomplete="off">
+                    <p class="text-danger"><?php if(isset($errors['errorsemail'])) echo $errors['errorsemail']; ?></p>
                     <?php
 
                     $mindate = date("Y-m-d");
                     ?>
                     <label>Choisir le jour</label>
                     
-                    <input type="date" required id="date" name="date" value="<?=date("Y-m-d")?>">
+                    <input type="date" id="date" name="date" value="<?=date("Y-m-d")?>" class="form-control" autocomplete="off">
                     <label for="select">Choisir une heure</label>
                     <div class="custom-select">
-                    <select name="heure" required id="heure" value="<?php echo $heure; ?>" required>>
-                    <?php 
-                    for($hours=8; $hours<12; $hours++)
-                    {
-                        for($mins=0; $mins<60; $mins+=30)
-                        { 
-                            $time = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
-                            echo '<option value= "'.$time.'">'.$time.'</option>';
-                        }
-                    }
-                    for($hours=14; $hours<18; $hours++)
-                    {
-                        for($mins=0; $mins<60; $mins+=30)
-                        { 
-                            $time = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
-                            echo '<option value= "'.$time.'">'.$time.'</option>';
-                        }
-                    }
-                    
-                    ?>
+                    <select name="heure" id="heure" value="<?php echo $heure; ?>" class="form-control" autocomplete="off" >>
+                    <p class="text-danger"><?php if(isset($errors['errorsheure'])) echo $errors['errorsheure']; ?></p>
+                    <option>8h30</option>
+                    <option>9h00</option>
+                    <option>9h30</option>
+                    <option>10h00</option>
+                    <option>10h30</option>
+                    <option>11h00</option>
+                    <option>11h30</option>
+                    <option>14h00</option>
+                    <option>14h30</option>
+                    <option>15h00</option>
+                    <option>15h30</option>
+                    <option>16h00</option>
+                    <option>16h30</option>
+                    <option>17h00</option>
+                    <option>17h30</option>
                     </select>
                     </div>
                     

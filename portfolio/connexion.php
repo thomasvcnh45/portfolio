@@ -7,7 +7,7 @@ session_start();
 error_reporting(0);
 
 if (isset($_SESSION['username'])) {
-    header("Location: welcome.php");
+    header("Location: pageuser.php");
 }
 
 if (isset($_POST['submit'])) {
@@ -16,10 +16,20 @@ if (isset($_POST['submit'])) {
 
 	$sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
 	$result = mysqli_query($conn, $sql);
+	
 	if ($result->num_rows > 0) {
 		$row = mysqli_fetch_assoc($result);
-		$_SESSION['username'] = $row['username'];
-		header("Location: welcome.php");
+		if($row["usertype"]=="user")
+		{
+			$_SESSION['username'] = $row['username'];
+			header("Location:menuuser.php");
+		}
+		elseif($row["usertype"]=="admin")
+		{
+			$_SESSION['username'] = $row['username'];
+			header("Location:menuadmin.php");
+		}
+		
 	} else {
 		echo "<script>alert('Woops! Email or Password is Wrong.')</script>";
 	}
