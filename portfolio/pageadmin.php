@@ -7,39 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 ?>
 
-<?php
-if (isset($_POST['submit'])) {
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $telephone = $_POST['telephone'];
-    $email = $_POST['email'];
-    $date= $_POST['date'];
-    $heure= $_POST['heure'];
-    
-    $errors = array();
-
-    $errorstel = "SELECT telephone FROM reservation WHERE telephone='$telephone' ";
-    $teltel = mysqli_query($conn,$errorstel);
-    
-    $errorsemail = "SELECT email FROM reservation WHERE email='$email' ";
-    $emailemail = mysqli_query($conn,$errorsemail);
-
-    $errorsheure = "SELECT heure,date FROM reservation WHERE date='$date' AND heure='$heure' ";
-    $heureheure = mysqli_query($conn,$errorsheure);
-	
-            
-    if(count($errors)==0) {
-
-        $query = "INSERT INTO reservation (nom, prenom, telephone, email, date, heure) VALUES('$nom','$prenom','$telephone','$email','$date', '$heure')";
-        $result = mysqli_query($conn,$query);
-        if ($result){
-            echo "<script>alert('Votre réservation a bien été pris en compte')</script>";
-        }else{
-            echo "<script>alert('Une erreure est survenue')</script>";
-        }
-        }
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
